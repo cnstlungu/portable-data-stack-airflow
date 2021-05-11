@@ -1,6 +1,6 @@
-# Demo Docker-Based ETL Application
+# Demo Docker-Based Business Intelligence Suite
 
-This application is the Business Intelligence for an imaginary company selling postcards. The company sells both directly but also through resellers in the majority of European countries.
+This application is a Business Intelligence suite for an imaginary company selling postcards. The company sells both directly but also through resellers in the majority of European countries.
 
 
 ## Setup
