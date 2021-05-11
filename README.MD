@@ -56,9 +56,9 @@ Once the docker-compose building process has completed, we may open the Airflow 
 - **load_data_warehouse**: this workflow transforms the data from transactional and flat-file sources, stores them in a staging area and loads the data warehouse
 
 
-![Apache Airflow](airflow.gif "Orchestration")
+![Apache Airflow](resources/airflow.gif "Orchestration")
 
 
 After the DAGs have completed you can either analyze the data using the querying and visualization tools provided by Superset (available locally on port 8088), or query the Data Warehouse (available locally on port 54321)
 
-![Apache Superset](superset.gif "Superset")
+![Apache Superset](resources/superset.gif "Superset")
