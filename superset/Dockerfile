@@ -1,4 +1,4 @@
-FROM apache/superset
+FROM apache/superset:1.4.2
 ARG SUPERSET_ADMIN
 ARG SUPERSET_PASSWORD
 ARG POSTGRES_USER
@@ -17,5 +17,3 @@ RUN superset db upgrade
 RUN superset init
 RUN superset set_database_uri -d OLTP  -u postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@oltp:5432/sales_oltp
 RUN superset set_database_uri -d DW  -u postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@dw:5432/sales_dw
-COPY superset/dashboards.json .
-RUN superset import_dashboards -p dashboards.json
