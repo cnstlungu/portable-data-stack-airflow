@@ -3,4 +3,5 @@ __pycache__/
 *.csv
 *.xml
 *.json
+!output.json
 *.pgsql
