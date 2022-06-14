@@ -5,7 +5,7 @@ import os
 from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
 from airflow.utils.dates import days_ago
-from airflow.operators.sensors import ExternalTaskSensor
+from airflow.sensors.external_task import ExternalTaskSensor
 
 
 AIRFLOW_CONN_SALES_DW = os.getenv('AIRFLOW_CONN_SALES_DW')

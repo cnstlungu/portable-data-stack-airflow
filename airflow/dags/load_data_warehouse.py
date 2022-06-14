@@ -4,7 +4,7 @@ import pytz
 from airflow import DAG
 from airflow.operators.postgres_operator import PostgresOperator
 from airflow.utils.dates import days_ago
-from airflow.operators.sensors import ExternalTaskSensor
+from airflow.sensors.external_task import ExternalTaskSensor
 from airflow.operators.dummy_operator import DummyOperator
 from airflow.models import DagRun
 

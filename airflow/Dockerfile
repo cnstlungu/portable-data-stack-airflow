@@ -1,4 +1,4 @@
-FROM puckel/docker-airflow:1.10.9
+FROM ednarb29/docker-airflow:2.2.3
 RUN pip install xmltodict
 USER root
 RUN apt-get update
