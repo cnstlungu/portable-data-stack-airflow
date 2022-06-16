@@ -22,6 +22,8 @@ Demo credentials are set in the .env file, and are by default the following:
 * POSTGRES_PASSWORD=postgres
 * SUPERSET_ADMIN=admin
 * SUPERSET_PASSWORD=admin
+* AIRFLOW_USER=airflow
+* AIRFLOW_PASSWORD=airflow
 
 ### Ports exposed locally
 * Airflow: 8080
@@ -56,7 +58,7 @@ Once the docker-compose building process has completed, we may open the Airflow 
 - **load_data_warehouse**: this workflow transforms the data from transactional and flat-file sources, stores them in a staging area and loads the data warehouse
 
 
-![Apache Airflow](resources/airflow.gif "Orchestration")
+![Apache Airflow](resources/airflow.png "Orchestration")
 
 
 After the DAGs have completed you can either analyze the data using the querying and visualization tools provided by Superset (available locally on port 8088), or query the Data Warehouse (available locally on port 54321)
