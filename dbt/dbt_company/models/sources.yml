@@ -1,0 +1,22 @@
+version: 2
+sources:
+- name: import
+  schema: import
+  tables:
+  - name: customers
+    identifier: customers
+  - name: products
+    identifier: products
+  - name: resellers
+    identifier: resellers
+  - name: resellercsv
+    identifier: resellercsv
+  - name: transactions
+    identifier: transactions
+  - name: channels
+    identifier: channels
+- name: preprocessed
+  schema: staging
+  tables:
+  - name: resellerxmlextracted
+    identifier: resellerxmlextracted
