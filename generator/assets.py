@@ -144,7 +144,7 @@ PRODUCTS  = []
 
 id = 1
 for e in product_data:
-    PRODUCTS.append({'name': f'{e[0]} {e[1]} {e[2]} ', 'city': e[2], 'price': randrange(15,45)/10.0, 'product_id': id })
+    PRODUCTS.append({'name': f'{e[0]} {e[1]} {e[2]}', 'city': e[2], 'price': randrange(15,45)/10.0, 'product_id': id })
     id += 1
 
 FIRST_NAMES = [names.get_first_name() for i in range(1000)]

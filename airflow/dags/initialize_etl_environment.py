@@ -31,7 +31,8 @@ create_schemas_task = PostgresOperator(
     sql = """
     Create schema if not exists import;
     Create schema if not exists warehouse;
-    Create schema if not exists ops;        
+    Create schema if not exists ops;
+    Create schema if not exists staging;        
     """,
     dag=dag,
     postgres_conn_id = 'sales_dw',

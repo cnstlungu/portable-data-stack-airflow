@@ -44,6 +44,5 @@ SELECT TO_CHAR(datum, 'yyyymmdd')::INT AS date_dim_id,
 FROM (SELECT '1970-01-01'::DATE + SEQUENCE.DAY AS datum
       FROM GENERATE_SERIES(0, 29219) AS SEQUENCE (DAY)
       GROUP BY SEQUENCE.DAY) DQ
-where TO_CHAR(datum, 'yyyymmdd')::INT not in (select datekey from warehouse.Dim_Date)
 ORDER BY 1
 
