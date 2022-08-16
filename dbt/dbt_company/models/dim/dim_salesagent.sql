@@ -1,3 +1,11 @@
+{{
+config(
+materialized = 'table',
+unique_key = 'sales_agent_key'
+)
+}}
+
+
 SELECT
     reseller_id AS sales_agent_key,
     reseller_id AS original_reseller_id,

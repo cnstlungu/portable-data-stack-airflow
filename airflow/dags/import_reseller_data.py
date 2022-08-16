@@ -266,7 +266,7 @@ insert_transform_reseller = PostgresOperator(
         data ->> 'salesChannel' as sales_channel,
         cast(data ->> 'totalAmount' as money) as total_amount,
         cast(data ->> 'transactionId' as int) as transaction_id,
-        cast(data ->> 'numberOfPurchasedPostcards' as int) as no_purchased_postcards,
+        cast(data ->> 'qty' as int) as no_purchased_postcards,
         to_date(data ->> '@date','YYYYMMDD') as file_date,
         data ->> 'officeLocation' as Office_location
 

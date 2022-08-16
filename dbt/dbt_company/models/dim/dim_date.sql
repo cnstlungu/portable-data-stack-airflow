@@ -1,6 +1,7 @@
 {{
 config(
-materialized = 'table'
+materialized = 'table',
+unique_key = 'date_dim_id'
 )
 }}
 

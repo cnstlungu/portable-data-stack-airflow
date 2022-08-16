@@ -1,6 +1,7 @@
 {{
 config(
-materialized = 'table'
+materialized = 'table',
+unique_key = 'channel_key'
 )
 }}
 

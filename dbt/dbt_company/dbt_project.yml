@@ -39,6 +39,7 @@ models:
 seeds:
   dbt_company:
     +enabled: true
+    +schema: raw
     geography:
       id: int
       cityname: varchar(32)
