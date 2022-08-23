@@ -59,11 +59,11 @@ SELECT
     bought_date,
     'YYYYMMDD'
   ) :: INT AS bought_date_key,
-  amount AS total_amount,
+  amount::numeric AS total_amount,
   qty,
-  e.product_price,
+  e.product_price::numeric,
   e.geography_key,
-  NULL::money AS commissionpaid,
+  NULL::numeric AS commissionpaid,
   NULL::numeric AS commissionpct,
   loaded_timestamp
 

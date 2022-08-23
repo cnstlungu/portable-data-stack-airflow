@@ -57,10 +57,13 @@ services:
         AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@airflowdb:5432/airflow
         AIRFLOW_CONN_SALES_DW: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@dw:5432/sales_dw"
         AIRFLOW_CONN_SALES_OLTP: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@oltp:5432/sales_oltp
+        POSTGRES_USER: ${POSTGRES_USER}
+        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
         - ./airflow/dags:/usr/local/airflow/dags
         - ./import/csv:/import/csv
         - ./import/xml:/import/xml
+        - ./dbt/dbt_company:/usr/local/airflow/dbt
     ports:
         - "8080:8080"
     command: webserver

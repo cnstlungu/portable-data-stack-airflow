@@ -6,7 +6,7 @@ join {{ref('geography')}} g on g.cityname = e.product_city
 
 )
 
-select product_id, product_name, geography_key, product_price
+select product_id, product_name, geography_key, product_price::numeric
 
 from products
 

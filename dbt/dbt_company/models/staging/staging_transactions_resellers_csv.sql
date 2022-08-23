@@ -75,11 +75,11 @@ SELECT
     created_date,
     'YYYYMMDD'
   ) :: INT AS bought_date_key,
-  total_amount,
+  total_amount::numeric,
   number_of_purchased_postcards,
-  e.product_price,
+  e.product_price::numeric,
   e.geography_key,
-  s.commission_pct * total_amount AS commisionpaid,
+  s.commission_pct * total_amount::numeric AS commisionpaid,
   s.commission_pct AS commission_pct,
   loaded_timestamp
 FROM
