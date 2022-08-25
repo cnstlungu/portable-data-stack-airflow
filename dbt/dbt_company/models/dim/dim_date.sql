@@ -1,11 +1,11 @@
 {{
 config(
 materialized = 'table',
-unique_key = 'date_dim_id'
+unique_key = 'date_key'
 )
 }}
 
-SELECT TO_CHAR(datum, 'yyyymmdd')::INT AS date_dim_id,
+SELECT TO_CHAR(datum, 'yyyymmdd')::INT AS date_key,
        datum AS date_actual,
        EXTRACT(EPOCH FROM datum) AS epoch,
        TO_CHAR(datum, 'fmDDth') AS day_suffix,

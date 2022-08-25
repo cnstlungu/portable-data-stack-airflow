@@ -1,14 +1,18 @@
 from airflow import DAG
+
+from datetime import datetime
+from airflow.utils import timezone
 from airflow_dbt.operators.dbt_operator import (
     DbtSeedOperator,
     DbtRunOperator,
     DbtTestOperator
 )
-from airflow.utils.dates import days_ago
+
+now = timezone.utcnow()
 
 default_args = {
   'dir': '/usr/local/airflow/dbt',
-  'start_date': days_ago(0),
+  'start_date': timezone.datetime(2021,1,1),
   'dbt_bin': '/usr/local/airflow/.local/bin/dbt'
 }
 
