@@ -1,9 +1,19 @@
+# Environment
 __pycache__/
 .vscode/
+*.pgsql
+.venv/
+
+# Flat files
 *.csv
 *.xml
 *.json
-!dashboard.json
-*.pgsql
-.venv/
+
+# Dbt
+target/
+dbt_packages/
 logs/
+
+# Keeps
+!geography.csv
+!dashboard.json
