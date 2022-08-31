@@ -41,7 +41,7 @@ Generated flat files (XML, CSV) are saved in the **import** folder.
 
 The data is fictional and automatically generated. Any similarities with existing persons, entities, products or businesses are purely coincidental.
 
-## dbt core
+### dbt core
 
 If you'd like to run your dbt core model outside of Airflow, you can:
 
