@@ -5,3 +5,5 @@ __pycache__/
 *.json
 !dashboard.json
 *.pgsql
+.venv/
+dbt/
