@@ -3,6 +3,7 @@ __pycache__/
 .vscode/
 *.pgsql
 .venv/
+*.env
 
 # Flat files
 *.csv

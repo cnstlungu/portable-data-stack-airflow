@@ -23,7 +23,7 @@ with DAG(dag_id='run_dbt_tasks', default_args=default_args, schedule_interval='@
     task_id='wait_for_main',
     external_dag_id='import_main_data',
     execution_date_fn = lambda x: days_ago(1),
-    timeout=5,
+    timeout=300,
     dag=dag
 )
 
@@ -31,7 +31,7 @@ with DAG(dag_id='run_dbt_tasks', default_args=default_args, schedule_interval='@
     task_id='wait_for_resellers',
     external_dag_id='import_reseller_data',
     execution_date_fn = lambda x: days_ago(1),
-    timeout=5,
+    timeout=300,
     dag=dag
 )
 
