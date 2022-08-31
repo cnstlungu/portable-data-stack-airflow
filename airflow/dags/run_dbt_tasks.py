@@ -7,7 +7,8 @@ from airflow.sensors.external_task_sensor import ExternalTaskSensor
 from airflow_dbt.operators.dbt_operator import (
     DbtSeedOperator,
     DbtRunOperator,
-    DbtTestOperator
+    DbtTestOperator,
+    DbtDepsOperator
 )
 
 default_args = {
@@ -22,7 +23,7 @@ with DAG(dag_id='run_dbt_tasks', default_args=default_args, schedule_interval='@
     task_id='wait_for_main',
     external_dag_id='import_main_data',
     execution_date_fn = lambda x: days_ago(1),
-    timeout=1,
+    timeout=5,
     dag=dag
 )
 
@@ -30,9 +31,13 @@ with DAG(dag_id='run_dbt_tasks', default_args=default_args, schedule_interval='@
     task_id='wait_for_resellers',
     external_dag_id='import_reseller_data',
     execution_date_fn = lambda x: days_ago(1),
-    timeout=1,
+    timeout=5,
     dag=dag
 )
+
+  dbt_deps = DbtDepsOperator(
+    task_id='dbt_deps',
+  )
 
 
   dbt_seed = DbtSeedOperator(
@@ -49,4 +54,4 @@ with DAG(dag_id='run_dbt_tasks', default_args=default_args, schedule_interval='@
 
 
 
-  wait_for_main >> wait_for_resellers >> dbt_seed >> dbt_run >> dbt_test
+  wait_for_main >> wait_for_resellers >> dbt_deps >> dbt_seed >> dbt_run >> dbt_test
