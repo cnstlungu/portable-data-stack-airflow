@@ -57,6 +57,7 @@ services:
         AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@airflowdb:5432/airflow
         AIRFLOW_CONN_SALES_DW: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@dw:5432/sales_dw"
         AIRFLOW_CONN_SALES_OLTP: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@oltp:5432/sales_oltp
+        AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "False"
         POSTGRES_USER: ${POSTGRES_USER}
         POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
