@@ -92,10 +92,7 @@ Once the docker-compose building process has completed, we may open the Airflow 
 
 
 
-
 ![Apache Airflow](resources/demo_airflow.png "Orchestration")
-
-![dbt core](resources/demo_dbt_model_run.png "dbt core")
 
 
 After the DAGs have completed you can either analyze the data using the querying and visualization tools provided by Superset (available locally on port 8088), or query the Data Warehouse (available locally on port 54321)

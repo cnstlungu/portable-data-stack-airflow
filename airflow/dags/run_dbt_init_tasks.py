@@ -1,13 +1,10 @@
 from datetime import timedelta, datetime
 from airflow import DAG
-import pytz
 
 from airflow.utils.dates import days_ago
 from airflow.sensors.external_task_sensor import ExternalTaskSensor
 from airflow_dbt.operators.dbt_operator import (
     DbtSeedOperator,
-    DbtRunOperator,
-    DbtTestOperator,
     DbtDepsOperator
 )
 
@@ -17,7 +14,7 @@ default_args = {
   'dbt_bin': '/usr/local/airflow/.local/bin/dbt'
 }
 
-with DAG(dag_id='run_dbt_tasks', default_args=default_args, schedule_interval='@daily', ) as dag:
+with DAG(dag_id='run_dbt_init_tasks', default_args=default_args, schedule_interval='@daily', ) as dag:
 
   wait_for_main = ExternalTaskSensor(
     task_id='wait_for_main',
@@ -44,14 +41,6 @@ with DAG(dag_id='run_dbt_tasks', default_args=default_args, schedule_interval='@
     task_id='dbt_seed',
   )
 
-  dbt_run = DbtRunOperator(
-    task_id='dbt_run',
-  )
-
-  dbt_test = DbtTestOperator(
-    task_id='dbt_test',
-  )
 
 
-
-  wait_for_main >> wait_for_resellers >> dbt_deps >> dbt_seed >> dbt_run >> dbt_test
+  wait_for_main >> wait_for_resellers >> dbt_deps >> dbt_seed
