@@ -1,6 +1,6 @@
-# Demo Docker-Based Business Intelligence Suite
+# Portable Airflow Data Stack
 
-This application is a Business Intelligence suite for an imaginary company selling postcards. The company sells both directly but also through resellers in the majority of European countries.
+This application is an Analytics suite suite for an imaginary company selling postcards. The company sells both directly but also through resellers in the majority of European countries.
 
 ## Stack
 
@@ -72,6 +72,8 @@ If you'd like to run your dbt core model outside of Airflow, you can:
     - tests the model
 4. Analyze and visually explore the data using Superset or directly query the Data Warehouse database instance
 
+For superset, the default credentials are: user = admin, password = admin
+
 
 ## Overview of architecture
 
@@ -87,7 +89,8 @@ Once the docker-compose building process has completed, we may open the Airflow 
 - **initialize_etl_environment**: this workflow initializes the ETL environment by creating the necessary database objects; this needs to run only once;
 - **import_main_data** : this imports the data from the transactional system to a staging destination on the DW instance
 - **import_reseller_data**: this workflow extracts, preprocesses and loads the XML and CSV data sent by the resellers into a staging destination on the DW istance
-- **run_dbt_tasks**: this workflow transforms the data from transactional and flat-file sources, stores them in a staging area and loads the data warehouse, leveraging dbt-core
+- **run_dbt_init_tasks**: this workflow initializes dbt (needs to only run once)
+- **run_dbt_model**: this workflow transforms the data from transactional and flat-file sources, stores them in a staging area and loads the data warehouse, leveraging dbt-core
 
 
 
