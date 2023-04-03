@@ -14,7 +14,7 @@ default_args = {
   'dbt_bin': '/usr/local/airflow/.local/bin/dbt'
 }
 
-with DAG(dag_id='run_dbt_init_tasks', default_args=default_args, schedule_interval='@daily', ) as dag:
+with DAG(dag_id='run_dbt_init_tasks', default_args=default_args, schedule_interval='@once', ) as dag:
 
   wait_for_main = ExternalTaskSensor(
     task_id='wait_for_main',

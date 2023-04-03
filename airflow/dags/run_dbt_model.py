@@ -25,6 +25,7 @@ wait_for_dbt_init = ExternalTaskSensor(
     dag=dag
 )
 
+# Adapted from https://docs.astronomer.io/learn/airflow-dbt
 
 def load_manifest():
     local_filepath = f"{DBT_PATH}/target/manifest.json"
