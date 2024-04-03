@@ -10,6 +10,11 @@ This application is an Analytics suite suite for an imaginary company selling po
 - Superset
 
 
+## For other orchestration options, check the below:
+
+- [portable-data-stack-mage](https://github.com/cnstlungu/portable-data-stack-mage)
+- [portable-data-stack-dagster](https://github.com/cnstlungu/portable-data-stack-dagster)
+
 ## Setup
 
 Rename `.env.example` file to `.env` and set your desired password. Remember to never commit files containing passwords or any other sensitive information.
