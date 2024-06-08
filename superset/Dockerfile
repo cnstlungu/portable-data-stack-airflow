@@ -1,4 +1,4 @@
-FROM apache/superset:2.0.1 
+FROM apache/superset:2.0.1
 
 ARG SUPERSET_ADMIN
 ARG SUPERSET_PASSWORD
@@ -7,7 +7,7 @@ ARG POSTGRES_PASSWORD
 # Switching to root to install the required packages
 USER root
 COPY --chown=superset:superset ./superset/assets .
-RUN pip install psycopg2-binary
+RUN pip install psycopg2-binary==2.9.9
 USER superset
 RUN superset fab create-admin \
               --username ${SUPERSET_ADMIN} \
