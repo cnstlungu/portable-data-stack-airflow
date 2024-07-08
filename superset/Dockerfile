@@ -7,7 +7,11 @@ ARG POSTGRES_PASSWORD
 # Switching to root to install the required packages
 USER root
 COPY --chown=superset:superset ./superset/assets .
-RUN pip install psycopg2-binary==2.9.9
+
+ADD --chmod=755 https://astral.sh/uv/install.sh /install.sh
+RUN /install.sh && rm /install.sh
+
+RUN /root/.cargo/bin/uv pip install --system psycopg2-binary==2.9.9
 USER superset
 RUN superset fab create-admin \
               --username ${SUPERSET_ADMIN} \

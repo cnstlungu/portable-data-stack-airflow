@@ -5,7 +5,7 @@ This application is an Analytics suite suite for an imaginary company selling po
 ## Stack
 
 - Airflow
-- Docker & Docker-Compose
+- Docker (docker compose)
 - dbt core
 - Superset
 
@@ -21,12 +21,11 @@ Rename `.env.example` file to `.env` and set your desired password. Remember to 
 
 ### System requirements
 * [Docker](https://docs.docker.com/engine/install/)
-* [Docker-Compose](https://docs.docker.com/compose/install/)
 
-With **Docker engine** and **Docker-Compose** installed, change directory to the root folder of the project (also the one that contains docker-compose.yml) and run
+With **Docker engine** installed, change directory to the root folder of the project (also the one that contains docker-compose.yml) and run
 
 `
-docker-compose up --build
+docker compose up --build
 `
 
 ### Demo Credentials
@@ -82,7 +81,7 @@ For superset, the default credentials are: user = admin, password = admin
 
 ## Overview of architecture
 
-The docker-compose process will begin building the application suite. The suite is made up of the following components, each within its own docker container:
+The docker process will begin building the application suite. The suite is made up of the following components, each within its own docker container:
 * **generator**: this is a collection of Python scripts that will generate, insert and export the example data
 * **oltp**: this is the PostgreSQL instance that will simulate our transactional database (**sales_oltp**), serving as one of the sources of the data; this is locally available on the host machine exposed on port 54320.
 * **airflow**: this is the orchestrator tool that will trigger the ETL tasks; its GUI is locally available on port 8080; 
@@ -90,7 +89,7 @@ The docker-compose process will begin building the application suite. The suite 
 * **dw**: this is a PostgreSQL instance that will host our Data Warehouse; locally available on port 54321 (database **sales_dw**).
 * **superset**: this contains the web-based Business Intelligence application we will use to explore the data; exposed on port 8088.
 
-Once the docker-compose building process has completed, we may open the Airflow GUI (locally: localhost:8080) to view the orchestration of our tasks. There are four defined workflows (known as DAGs in Airflow), as follows:
+Once the docker building process has completed, we may open the Airflow GUI (locally: localhost:8080) to view the orchestration of our tasks. There are four defined workflows (known as DAGs in Airflow), as follows:
 - **initialize_etl_environment**: this workflow initializes the ETL environment by creating the necessary database objects; this needs to run only once;
 - **import_main_data** : this imports the data from the transactional system to a staging destination on the DW instance
 - **import_reseller_data**: this workflow extracts, preprocesses and loads the XML and CSV data sent by the resellers into a staging destination on the DW istance
