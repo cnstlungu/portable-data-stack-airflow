@@ -10,10 +10,11 @@ This application is an Analytics suite suite for an imaginary company selling po
 - Superset
 
 
-## For other orchestration options, check the below:
+## For other stacks, check the below:
 
 - [portable-data-stack-mage](https://github.com/cnstlungu/portable-data-stack-mage)
 - [portable-data-stack-dagster](https://github.com/cnstlungu/portable-data-stack-dagster)
+- [portable-data-stack-sqlmesh](https://github.com/cnstlungu/portable-data-stack-sqlmesh)
 
 ## Setup
 
