@@ -11,7 +11,7 @@ from airflow_dbt.operators.dbt_operator import (
 default_args = {
   'dir': '/usr/local/airflow/dbt',
   'start_date': days_ago(1),
-  'dbt_bin': '/usr/local/airflow/.local/bin/dbt'
+  'dbt_bin': '/usr/local/bin/dbt'
 }
 
 with DAG(dag_id='run_dbt_init_tasks', default_args=default_args, schedule_interval='@once', ) as dag:

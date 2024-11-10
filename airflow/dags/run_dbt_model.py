@@ -14,7 +14,7 @@ dag = DAG(
 )
 
 DBT_PATH = '/usr/local/airflow/dbt'
-DBT_BIN ='/usr/local/airflow/.local/bin/dbt'
+DBT_BIN ='/usr/local/bin/dbt'
 
 
 wait_for_dbt_init = ExternalTaskSensor(
