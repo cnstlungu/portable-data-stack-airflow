@@ -5,29 +5,51 @@ This application is an Analytics suite suite for an imaginary company selling po
 ## Stack
 
 - Airflow
-- Docker (docker compose)
+- Docker (Docker Compose)
+- DuckDB
 - dbt core
 - Superset
 
 
-## For other stacks, check the below:
+
+## Interested in the data model?
+
+Generation of example data and the underlying dbt-core model is available in the [postcard-company-datamart](https://github.com/cnstlungu/postcard-company-datamart) project
+
+## For implementations using other tools, using the same data model, check the below:
 
 - [portable-data-stack-mage](https://github.com/cnstlungu/portable-data-stack-mage)
 - [portable-data-stack-dagster](https://github.com/cnstlungu/portable-data-stack-dagster)
 - [portable-data-stack-sqlmesh](https://github.com/cnstlungu/portable-data-stack-sqlmesh)
 
+Implementations not using the same dbt-core model:
+
+- [portable-data-stack-bruin](https://github.com/cnstlungu/portable-data-stack-bruin)
+
+
+The Airflow / docker-compose setup is based on the [official Airflow docker-compose example](https://airflow.apache.org/docs/apache-airflow/stable/howto/docker-compose/index.html#fetching-docker-compose-yaml)
+
 ## Setup
 
-Rename `.env.example` file to `.env` and set your desired password. Remember to never commit files containing passwords or any other sensitive information.
+1. Rename `.env.example` file to `.env` and set your desired credentials. Remember to never commit files containing passwords or any other sensitive information.
 
-### System requirements
-* [Docker](https://docs.docker.com/engine/install/)
+2. Rename `shared/db/datamart.duckdb.example` to `shared/db/datamart.duckdb` or init an empty database file there with that name.
 
-With **Docker engine** installed, change directory to the root folder of the project (also the one that contains docker-compose.yml) and run
+3. With **Docker Engine** installed, change directory to the root folder of the project (also the one that contains docker-compose.yml) and run
 
-`
-docker compose up --build
-`
+    `docker compose up --build`
+
+    Note that this may take several minutes to completed. Check out the console to see when the Airflow interface is ready.
+
+4. Once the Docker suite has finished loading, open up [Airflow](http://localhost:8080) and execute one of the DAGs:
+
+- `run_dbt_individual_models` - this will run the dbt models one by one
+- `run_dbt` - this will run the dbt models in a single run
+
+Note that given the way DuckDB works, the run_dbt_individual_models will run each task sequentially, potentially taking a few minutes to go through all of them.
+
+5. After the successful processing of the DAGs, you can either analyze the data using the querying and visualization tools provided by Superset (available locally on port 8088), or query the Data Warehouse by connecting to the DuckDB database file found in the `shared/db/datamart.duckdb` file.
+
 
 ### Demo Credentials
 
@@ -36,73 +58,43 @@ Demo credentials are set in the .env file mentioned above. For Airflow they are 
 * AIRFLOW_USER=airflow
 * AIRFLOW_PASSWORD=airflow
 
+For Superset they are by default the following:
+
+* SUPERSET_USER=admin
+* SUPERSET_PASSWORD=admin
+
 ### Ports exposed locally
 * Airflow: 8080
 * Superset: 8088
-* PostgreSQL Data Warehouse instance: 54321
-* PosgreSQL OLTP Database instance: 54320
 
-Generated flat files (XML, CSV) are saved in the **import** folder.
-
-The data is fictional and automatically generated. Any similarities with existing persons, entities, products or businesses are purely coincidental.
-
-### dbt core
-
-If you'd like to run your dbt core model outside of Airflow, you can:
-
-- create a python virtual environment
-
-    `python3 -m venv .venv`
-
-- activate it 
-
-    `source .venv/bin/activate`
-
-- install the requirements found under dbt/requirements.txt
-
-    `pip install -r requirements.txt`
-
-- run dbt commands, like
-
-    `dbt compile`
 
 ### General flow
 
-1. Generate test data (flat files + OLTP data) using Python
-2. Import flat file data and OLTP data to staging area in the Data Warehouse, orchestrated by Airflow
-3. Process data, build fact and dimension tables, load the Data Warehouse using dbt
+1. Generate test data as parquet files using Python
+
+> **_NOTE:_**  The data is fictional and automatically generated. Any similarities with existing persons, entities, products or businesses are purely coincidental.
+
+2. Import data to the staging area in the Data Warehouse (DuckDB)
+3. Model data, build fact and dimension tables, load the Data Warehouse using dbt core
     - installs dbt dependencies
-    - seeds the database with static data (geography)
+    - seeds the database with static data (e.g. geography)
     - runs the model
     - tests the model
 4. Analyze and visually explore the data using Superset or directly query the Data Warehouse database instance
 
-For superset, the default credentials are: user = admin, password = admin
 
 
 ## Overview of architecture
 
-The docker process will begin building the application suite. The suite is made up of the following components, each within its own docker container:
-* **generator**: this is a collection of Python scripts that will generate, insert and export the example data
-* **oltp**: this is the PostgreSQL instance that will simulate our transactional database (**sales_oltp**), serving as one of the sources of the data; this is locally available on the host machine exposed on port 54320.
+The docker process will begin building the application suite. The suite is made up of the following services, each within its own docker container:
+* **generator**: this is a Python script that will generate, insert and export the example data to parquet files
 * **airflow**: this is the orchestrator tool that will trigger the ETL tasks; its GUI is locally available on port 8080; 
-* **airflowdb**: this is a PosgreSQL instance, upon which airflow depends
-* **dw**: this is a PostgreSQL instance that will host our Data Warehouse; locally available on port 54321 (database **sales_dw**).
 * **superset**: this contains the web-based Business Intelligence application we will use to explore the data; exposed on port 8088.
-
-Once the docker building process has completed, we may open the Airflow GUI (locally: localhost:8080) to view the orchestration of our tasks. There are four defined workflows (known as DAGs in Airflow), as follows:
-- **initialize_etl_environment**: this workflow initializes the ETL environment by creating the necessary database objects; this needs to run only once;
-- **import_main_data** : this imports the data from the transactional system to a staging destination on the DW instance
-- **import_reseller_data**: this workflow extracts, preprocesses and loads the XML and CSV data sent by the resellers into a staging destination on the DW istance
-- **run_dbt_init_tasks**: this workflow initializes dbt (needs to only run once)
-- **run_dbt_model**: this workflow transforms the data from transactional and flat-file sources, stores them in a staging area and loads the data warehouse, leveraging dbt-core
-
-
 
 
 ![Apache Airflow](resources/demo_airflow.png "Orchestration")
 
 
-After the DAGs have completed you can either analyze the data using the querying and visualization tools provided by Superset (available locally on port 8088), or query the Data Warehouse (available locally on port 54321)
+After the DAGs have completed you can either analyze the data using the querying and visualization tools provided by Superset (available locally on port 8088), or query the Data Warehouse by connecting to the DuckDB database file found in the `shared/db/datamart.duckdb` file.
 
 ![Apache Superset](resources/demo_dashboard.png "Superset")

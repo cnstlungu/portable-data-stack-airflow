@@ -1,13 +1,7 @@
-FROM ednarb29/docker-airflow:2.2.3
- 
-COPY airflow/profiles.yml /usr/local/airflow/.dbt/profiles.yml
+FROM apache/airflow:3.1.4
 
-USER root
-RUN apt-get update
-RUN apt-get install -y postgresql-client wget
+USER airflow
 
 RUN pip install uv
 
-RUN uv pip install --system xmltodict==0.13.0 airflow-dbt==0.4.0 dbt-postgres==1.0.2
-
-USER airflow
+RUN uv pip install --no-cache-dir dbt-core==1.10.15 dbt-duckdb==1.10.0

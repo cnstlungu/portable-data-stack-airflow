@@ -1,23 +1,17 @@
-FROM python:3.9-slim
+FROM python:3.11
 
-RUN apt-get update && apt-get install -y wget
+RUN apt-get update && apt-get install -y git make automake gcc g++ subversion
 
-ARG POSTGRES_USER
-ARG POSTGRES_PASSWORD
+RUN git clone -n --depth=1 --filter=tree:0 https://github.com/cnstlungu/postcard-company-datamart.git /generator
 
-ENV POSTGRES_USER=$POSTGRES_USER
-ENV POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+WORKDIR /generator
 
-WORKDIR /home/generator
+RUN git sparse-checkout set --no-cone generator && git checkout
 
-RUN mkdir csv
-
-RUN mkdir xml
-
-COPY generator .
+WORKDIR /generator/generator
 
 RUN pip install uv
 
 RUN uv pip install --system -r requirements.txt
 
-CMD ["python", "generate.py"]
+CMD ["python3", "generate.py"]

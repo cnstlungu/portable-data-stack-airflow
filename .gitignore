@@ -18,3 +18,10 @@ logs/
 # Keeps
 !geography.csv
 !dashboard.json
+
+dbt/postcard_company/*
+
+.venv
+*.egg-info/
+*.parquet
+*.duckdb
