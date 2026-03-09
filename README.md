@@ -1,6 +1,6 @@
 # Portable Airflow Data Stack
 
-This application is an Analytics suite suite for an imaginary company selling postcards. The company sells both directly but also through resellers in the majority of European countries.
+This application is an Analytics suite for an imaginary company selling postcards. The company sells both directly but also through resellers in the majority of European countries.
 
 ## Stack
 
@@ -39,7 +39,7 @@ The Airflow / docker-compose setup is based on the [official Airflow docker-comp
 
     `docker compose up --build`
 
-    Note that this may take several minutes to completed. Check out the console to see when the Airflow interface is ready.
+    Note that this may take several minutes to complete. Check out the console to see when the Airflow interface is ready.
 
 4. Once the Docker suite has finished loading, open up [Airflow](http://localhost:8080) and execute one of the DAGs:
 

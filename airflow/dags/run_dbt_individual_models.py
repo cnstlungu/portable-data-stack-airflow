@@ -16,11 +16,11 @@ default_args = {
 }
 
 dag = DAG(
-    dag_id="run_dbt_model",
+    dag_id="run_dbt_individual_models",
     default_args=default_args,
     start_date=pendulum.today('UTC').add(days=-1),
     description="A dbt wrapper for Airflow",
-    schedule='@daily',
+    schedule='@once',
     catchup=False,
     max_active_tasks=1,  # Ensure serial execution to avoid DuckDB lock conflicts
     tags=['dbt', 'transformation', 'individual-models'],
