@@ -42,10 +42,10 @@ The Airflow / docker-compose setup is based on the [official Airflow docker-comp
 
     Note that this may take several minutes to complete. Check out the console to see when the Airflow interface is ready.
 
-4. Once the Docker suite has finished loading, open up [Airflow](http://localhost:8080) and execute one of the DAGs:
+4. Once the Docker suite has finished loading, open up [Airflow](http://localhost:8080) and execute:
 
-- `run_dbt_individual_models` - this will run the dbt models one by one
-- `run_dbt` - this will run the dbt models in a single run
+- `run_dbt` - **run this first.** It installs dependencies, seeds, compiles and runs the whole project in one go.
+- `run_dbt_individual_models` - runs the models one at a time, building one Airflow task per model. It derives those tasks from dbt's compiled `manifest.json`, so it only has something to do once `run_dbt` has compiled the project at least once.
 
 Note that given the way DuckDB works, the run_dbt_individual_models will run each task sequentially, potentially taking a few minutes to go through all of them.
 

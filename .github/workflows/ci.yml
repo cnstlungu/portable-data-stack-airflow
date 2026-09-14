@@ -65,6 +65,17 @@ jobs:
           wait_for Airflow http://localhost:8080
           wait_for Superset http://localhost:8088
 
+      - name: Check the DAGs parse
+        run: |
+          echo "--- import errors ---"
+          docker compose exec -T airflow-scheduler airflow dags list-import-errors
+          echo "--- registered DAGs ---"
+          dags=$(docker compose exec -T airflow-scheduler airflow dags list)
+          echo "$dags"
+          for d in run_dbt run_dbt_individual_models; do
+            echo "$dags" | grep -q "$d" || { echo "::error::DAG $d did not register"; exit 1; }
+          done
+
       - name: Container status and logs on failure
         if: failure()
         run: |

@@ -42,16 +42,16 @@ dag = DAG(
 
 # Adapted from https://docs.astronomer.io/learn/airflow-dbt
 
-def load_manifest():
-    """Load dbt manifest.json, returning empty structure if not found."""
-    local_filepath = f"{DBT_PATH}/target/manifest.json"
-    try:
-        with open(local_filepath) as f:
-            data = json.load(f)
-    except FileNotFoundError:
-        data = {"nodes": {}}
+MANIFEST_PATH = f"{DBT_PATH}/target/manifest.json"
 
-    return data
+
+def load_manifest():
+    """Load dbt manifest.json, or None when it has not been generated yet."""
+    try:
+        with open(MANIFEST_PATH) as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return None
 
 
 def make_dbt_task(node, dbt_verb):
@@ -83,42 +83,60 @@ def make_dbt_task(node, dbt_verb):
     return dbt_task
 
 
-# Load manifest and create tasks
+# Load the manifest and build one task per model.
+#
+# The manifest only exists once dbt has compiled. On a fresh checkout the dbt
+# container has done nothing but check the project out, so there is no manifest.
+# This DAG used to render with just deps and seed in that case, then run green
+# having built no models at all. Surface it instead of succeeding silently.
 data = load_manifest()
 
-dbt_tasks = {}
-for node in data["nodes"].keys():
-    if node.split(".")[0] == "model":
-        node_test = node.replace("model", "test")
+if data is None:
+    with dag:
+        BashOperator(
+            task_id="dbt_manifest_missing",
+            bash_command=(
+                f'echo "No dbt manifest at {MANIFEST_PATH}." >&2; '
+                'echo "Run the run_dbt DAG first: it compiles the project. '
+                'This DAG builds one task per model from the compiled manifest, '
+                'so it has nothing to build until that exists." >&2; '
+                "exit 1"
+            ),
+        )
+else:
+    dbt_tasks = {}
+    for node in data["nodes"].keys():
+        if node.split(".")[0] == "model":
+            node_test = node.replace("model", "test")
 
-        dbt_tasks[node] = make_dbt_task(node, "run")
-        dbt_tasks[node_test] = make_dbt_task(node, "test")
+            dbt_tasks[node] = make_dbt_task(node, "run")
+            dbt_tasks[node_test] = make_dbt_task(node, "test")
 
-# Set up task dependencies
-for node in data["nodes"].keys():
-    if node.split(".")[0] == "model":
-        # Set dependency to run tests on a model after model run finishes
-        node_test = node.replace("model", "test")
-        dbt_tasks[node] >> dbt_tasks[node_test]
+    # Set up task dependencies
+    for node in data["nodes"].keys():
+        if node.split(".")[0] == "model":
+            # Set dependency to run tests on a model after model run finishes
+            node_test = node.replace("model", "test")
+            dbt_tasks[node] >> dbt_tasks[node_test]
 
-        # Set all model -> model dependencies
-        for upstream_node in data["nodes"][node]["depends_on"]["nodes"]:
-            upstream_node_type = upstream_node.split(".")[0]
-            if upstream_node_type == "model":
-                dbt_tasks[upstream_node] >> dbt_tasks[node]
+            # Set all model -> model dependencies
+            for upstream_node in data["nodes"][node]["depends_on"]["nodes"]:
+                upstream_node_type = upstream_node.split(".")[0]
+                if upstream_node_type == "model":
+                    dbt_tasks[upstream_node] >> dbt_tasks[node]
 
-# Setup tasks
-dbt_deps = BashOperator(
-    task_id='dbt_deps',
-    dag=dag,
-    bash_command=f'cd {DBT_PATH} && {DBT_BIN} deps'
-)
+    # Setup tasks
+    dbt_deps = BashOperator(
+        task_id='dbt_deps',
+        dag=dag,
+        bash_command=f'cd {DBT_PATH} && {DBT_BIN} deps'
+    )
 
-dbt_seed = BashOperator(
-    task_id='dbt_seed',
-    dag=dag,
-    bash_command=f'cd {DBT_PATH} && {DBT_BIN} seed'
-)
+    dbt_seed = BashOperator(
+        task_id='dbt_seed',
+        dag=dag,
+        bash_command=f'cd {DBT_PATH} && {DBT_BIN} seed'
+    )
 
-# Task dependencies
-dbt_deps >> dbt_seed >> tuple(dbt_tasks.values())
+    # Task dependencies
+    dbt_deps >> dbt_seed >> tuple(dbt_tasks.values())
