@@ -64,7 +64,7 @@ def make_dbt_task(node, dbt_verb):
             task_id=node,
             bash_command=f"""
             cd {DBT_PATH} &&
-            {DBT_BIN} {GLOBAL_CLI_FLAGS} {dbt_verb} --target local --models {model}
+            {DBT_BIN} {GLOBAL_CLI_FLAGS} {dbt_verb} --target local --select {model}
             """,
             dag=dag,
         )
@@ -75,7 +75,7 @@ def make_dbt_task(node, dbt_verb):
             task_id=node_test,
             bash_command=f"""
             cd {DBT_PATH} &&
-            {DBT_BIN} {GLOBAL_CLI_FLAGS} {dbt_verb} --target local --models {model}
+            {DBT_BIN} {GLOBAL_CLI_FLAGS} {dbt_verb} --target local --select {model}
             """,
             dag=dag,
         )
