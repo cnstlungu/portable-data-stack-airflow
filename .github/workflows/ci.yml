@@ -76,6 +76,34 @@ jobs:
             echo "$dags" | grep -q "$d" || { echo "::error::DAG $d did not register"; exit 1; }
           done
 
+      # DAGs registering is not the same as the pipeline working. Trigger the
+      # one the README puts first and check what it wrote: this job used to go
+      # green on "the containers came up", which says nothing about the data.
+      - name: Run the pipeline and check the warehouse
+        run: |
+          docker compose exec -T airflow-scheduler airflow dags unpause run_dbt
+          docker compose exec -T airflow-scheduler airflow dags trigger run_dbt
+
+          # N_TRANSACTIONS direct sales, plus a fixed 100,000 per reseller feed.
+          expected=$((N_TRANSACTIONS + 200000))
+          rows=0
+          for _ in $(seq 1 60); do
+            rows=$(docker compose exec -T airflow-scheduler python -c \
+              "import duckdb;print(duckdb.connect('/shared/db/datamart.duckdb',read_only=True).execute('select count(*) from postcard_company_core.fact_sales').fetchone()[0])" \
+              2>/dev/null | tr -cd '0-9')
+            rows=${rows:-0}
+            echo "fact_sales: ${rows} / ${expected}"
+            [ "$rows" -ge "$expected" ] && break
+            sleep 10
+          done
+
+          if [ "$rows" -ne "$expected" ]; then
+            echo "::error::fact_sales holds ${rows} rows, expected ${expected}"
+            docker compose exec -T airflow-scheduler airflow dags list-runs -d run_dbt || true
+            exit 1
+          fi
+          echo "fact_sales holds ${rows} rows, as expected"
+
       - name: Container status and logs on failure
         if: failure()
         run: |
