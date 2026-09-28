@@ -25,3 +25,4 @@ dbt/postcard_company/*
 *.egg-info/
 *.parquet
 *.duckdb
+.DS_Store
