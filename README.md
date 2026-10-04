@@ -96,9 +96,16 @@ For Superset they are by default the following:
 ## Overview of architecture
 
 The docker process will begin building the application suite. The suite is made up of the following services, each within its own docker container:
-* **generator**: this is a Python script that will generate, insert and export the example data to parquet files
+* **generator**: a Python script, from the [postcard-company-datamart](https://github.com/cnstlungu/postcard-company-datamart) project, that generates the example data and exports it to parquet files
+* **dbt**: copies the data model from the [postcard-company-datamart](https://github.com/cnstlungu/postcard-company-datamart) project into `dbt/postcard_company`, where Airflow runs it. Edits you make there survive restarts; they are replaced only when `DATAMART_REF` moves to a different version of the model.
 * **airflow**: this is the orchestrator tool that will trigger the ETL tasks; its GUI is locally available on port 8080; 
-* **superset**: this contains the web-based Business Intelligence application we will use to explore the data; exposed on port 8088.
+* **superset**: this contains the web-based Business Intelligence application we will use to explore the data; exposed on port 8088; built from the [postcard-company-datamart](https://github.com/cnstlungu/postcard-company-datamart) project, dashboard included.
+
+The generator, the dbt project and Superset with its dashboard are not kept in this repository. Docker builds them straight from [postcard-company-datamart](https://github.com/cnstlungu/postcard-company-datamart), by git URL, at the tag set by `DATAMART_REF` in `docker-compose.yml`, so every portable data stack runs the same model and the same dashboard. To build from a newer tag or a branch instead:
+
+```bash
+DATAMART_REF=main docker compose build
+```
 
 
 ![Apache Airflow](resources/demo_airflow.png "Orchestration")

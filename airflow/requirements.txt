@@ -2,7 +2,8 @@
 # until July 2027 and ships the v2 parser behind --use-v2-parser.
 # duckdb is pinned explicitly: unpinned, dbt-duckdb resolves it to the newest
 # release, which writes a warehouse the Superset image cannot read. Keep this in
-# step with superset/requirements.txt.
+# step with superset/requirements.txt in postcard-company-datamart at the
+# DATAMART_REF in docker-compose.yml: the Superset image is built from there.
 dbt-core==1.12.5
 dbt-duckdb==1.11.0
 duckdb==1.4.4
