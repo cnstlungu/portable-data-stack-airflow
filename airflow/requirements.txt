@@ -4,6 +4,6 @@
 # release, which writes a warehouse the Superset image cannot read. Keep this in
 # step with superset/requirements.txt in postcard-company-datamart at the
 # DATAMART_REF in docker-compose.yml: the Superset image is built from there.
-dbt-core==1.12.5
+dbt-core==1.12.6
 dbt-duckdb==1.11.0
-duckdb==1.4.4
+duckdb==1.5.6
